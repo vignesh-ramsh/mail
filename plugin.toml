@@ -1,0 +1,6 @@
+[plugin]
+name = "mail"
+version = "0.1.0"
+capability = "mail"
+requires = ["psqldb", "relay"]
+optional_requires = ["lineup"]

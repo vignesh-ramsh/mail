@@ -1,0 +1,44 @@
+{
+  "system": false,
+  "audit": true,
+  "child": false,
+  "fields": [
+    {
+      "id": "AA01",
+      "name": "name",
+      "type": "STRING",
+      "required": true,
+      "unique": true,
+      "length": 80
+    },
+    {
+      "id": "AA02",
+      "name": "subject",
+      "type": "STRING",
+      "required": true,
+      "unique": false,
+      "length": 200
+    },
+    {
+      "id": "AA03",
+      "name": "text_body",
+      "type": "TEXT",
+      "required": true,
+      "unique": false
+    },
+    {
+      "id": "AA04",
+      "name": "html_body",
+      "type": "TEXT",
+      "required": false,
+      "unique": false
+    },
+    {
+      "id": "AA05",
+      "name": "sample_context",
+      "type": "JSON",
+      "required": false,
+      "unique": false
+    }
+  ]
+}

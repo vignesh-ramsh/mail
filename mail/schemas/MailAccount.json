@@ -1,0 +1,70 @@
+{
+  "system": false,
+  "audit": true,
+  "child": false,
+  "fields": [
+    {
+      "id": "AA01",
+      "name": "name",
+      "type": "STRING",
+      "required": true,
+      "unique": true,
+      "length": 60
+    },
+    {
+      "id": "AA02",
+      "name": "provider",
+      "type": "SELECT",
+      "required": true,
+      "unique": false,
+      "default": "smtp",
+      "options": ["smtp"]
+    },
+    {
+      "id": "AA03",
+      "name": "from_email",
+      "type": "EMAIL",
+      "required": true,
+      "unique": false
+    },
+    {
+      "id": "AA04",
+      "name": "from_name",
+      "type": "STRING",
+      "required": false,
+      "unique": false,
+      "length": 120
+    },
+    {
+      "id": "AA05",
+      "name": "config",
+      "type": "JSON",
+      "required": false,
+      "unique": false
+    },
+    {
+      "id": "AA06",
+      "name": "secret_ref",
+      "type": "STRING",
+      "required": false,
+      "unique": false,
+      "length": 120
+    },
+    {
+      "id": "AA07",
+      "name": "is_default",
+      "type": "BOOLEAN",
+      "required": true,
+      "unique": false,
+      "default": false
+    },
+    {
+      "id": "AA08",
+      "name": "enabled",
+      "type": "BOOLEAN",
+      "required": true,
+      "unique": false,
+      "default": true
+    }
+  ]
+}
