@@ -13,11 +13,13 @@ Only file METADATA (`filename`/`source`/`mimetype`) crosses the queue
 for an attachment — never raw bytes, so a large attachment never
 bloats the Redis payload `enqueue()` carries. This is the one place
 that resolves real content, exactly once, right before sending: a
-local path is read off disk, a URL is fetched over HTTP — the account
-and template rows themselves are re-fetched here too (by name only),
-so a credential rotated or a template edited between enqueue and
-delivery is picked up automatically rather than working from a stale
-snapshot taken at enqueue time.
+local path is read off disk, a URL is fetched over HTTP. The ACCOUNT
+row is re-fetched here (by name only), so a credential rotated between
+enqueue and delivery is picked up automatically. Template CONTENT, by
+contrast, is rendered at send()-call time (mail/__init__._render) and
+crosses the queue as finished subject/body strings — a template edit
+takes effect from the next send() call onward, not retroactively for
+jobs already sitting in the queue.
 """
 
 from __future__ import annotations
