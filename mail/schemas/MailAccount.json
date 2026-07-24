@@ -18,14 +18,17 @@
       "required": true,
       "unique": false,
       "default": "smtp",
-      "options": ["smtp"]
+      "options": [
+        "smtp"
+      ]
     },
     {
       "id": "AA03",
       "name": "from_email",
       "type": "EMAIL",
       "required": true,
-      "unique": false
+      "unique": false,
+      "list": false
     },
     {
       "id": "AA04",
@@ -40,7 +43,8 @@
       "name": "config",
       "type": "JSON",
       "required": false,
-      "unique": false
+      "unique": false,
+      "list": false
     },
     {
       "id": "AA06",
@@ -48,7 +52,8 @@
       "type": "STRING",
       "required": false,
       "unique": false,
-      "length": 120
+      "length": 120,
+      "list": false
     },
     {
       "id": "AA07",

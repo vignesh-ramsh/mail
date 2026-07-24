@@ -24,21 +24,24 @@
       "name": "text_body",
       "type": "TEXT",
       "required": true,
-      "unique": false
+      "unique": false,
+      "list": false
     },
     {
       "id": "AA04",
       "name": "html_body",
       "type": "TEXT",
       "required": false,
-      "unique": false
+      "unique": false,
+      "list": false
     },
     {
       "id": "AA05",
       "name": "sample_context",
       "type": "JSON",
       "required": false,
-      "unique": false
+      "unique": false,
+      "list": false
     }
   ]
 }
