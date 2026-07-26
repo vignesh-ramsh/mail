@@ -56,20 +56,30 @@ def _split(value: str) -> list[str]:
 @app.command(name="send-test")
 def send_test(
     to: str = typer.Option(..., "--to", help="Comma-separated recipient emails."),
-    account: str = typer.Option(None, "--account", help="MailAccount name. Default: the account with is_default=true."),
+    account: str = typer.Option(
+        None, "--account", help="MailAccount name. Default: the account with is_default=true."
+    ),
     cc: str = typer.Option("", "--cc", help="Comma-separated Cc recipients."),
     bcc: str = typer.Option("", "--bcc", help="Comma-separated Bcc recipients."),
     template: str = typer.Option(None, "--template", help="MailTemplate name."),
-    context: str = typer.Option(None, "--context", help='JSON object of template variables, e.g. \'{"name": "Ada"}\'.'),
+    context: str = typer.Option(
+        None, "--context", help='JSON object of template variables, e.g. \'{"name": "Ada"}\'.'
+    ),
     subject: str = typer.Option(None, "--subject", help="Direct subject (instead of --template)."),
-    text: str = typer.Option(None, "--text", help="Direct plain-text body (instead of --template)."),
+    text: str = typer.Option(
+        None, "--text", help="Direct plain-text body (instead of --template)."
+    ),
     html: str = typer.Option(None, "--html", help="Direct HTML body (optional, direct mode only)."),
-    attach: str = typer.Option("", "--attach", help="Comma-separated attachments: local paths or http(s):// URLs."),
+    attach: str = typer.Option(
+        "", "--attach", help="Comma-separated attachments: local paths or http(s):// URLs."
+    ),
 ) -> None:
     """Send a real email through a configured MailAccount — for verifying
     an account/template setup from the command line, without writing a
     throwaway script."""
-    attachments = [{"filename": a.rsplit("/", 1)[-1], "source": a, "mimetype": None} for a in _split(attach)]
+    attachments = [
+        {"filename": a.rsplit("/", 1)[-1], "source": a, "mimetype": None} for a in _split(attach)
+    ]
     parsed_context = json.loads(context) if context else {}
 
     async def _send() -> None:

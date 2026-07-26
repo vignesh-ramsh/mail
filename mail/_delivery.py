@@ -78,7 +78,9 @@ async def deliver_email(
 
     provider = PROVIDERS.get(account["provider"])
     if provider is None:
-        raise MailDeliveryError(f"mail account '{account_name}' has unknown provider '{account['provider']}'")
+        raise MailDeliveryError(
+            f"mail account '{account_name}' has unknown provider '{account['provider']}'"
+        )
 
     credential = None
     if account.get("secret_ref"):

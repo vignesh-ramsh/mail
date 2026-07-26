@@ -76,7 +76,10 @@ class SMTPProvider:
             mimetype = att.mimetype or "application/octet-stream"
             maintype, _, subtype = mimetype.partition("/")
             email_msg.add_attachment(
-                att.content, maintype=maintype, subtype=subtype or "octet-stream", filename=att.filename
+                att.content,
+                maintype=maintype,
+                subtype=subtype or "octet-stream",
+                filename=att.filename,
             )
 
         await aiosmtplib.send(

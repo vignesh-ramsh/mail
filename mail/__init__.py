@@ -89,7 +89,8 @@ class MailProvider:
             raise ValueError(
                 "arc.mail.send() needs exactly one of: `template` (+ optional "
                 "`context`), or direct `subject`/`text_body`/`html_body` — got "
-                + ("both" if template else "neither") + "."
+                + ("both" if template else "neither")
+                + "."
             )
 
         account_row = await self._resolve_account(account)
@@ -126,18 +127,28 @@ class MailProvider:
         rows = await arc.relay.list("mailaccount", filters=filters, limit=1)
         if not rows:
             raise AccountNotFoundError(
-                f"no mail account named '{name}'" if name else "no default mail account is configured"
+                f"no mail account named '{name}'"
+                if name
+                else "no default mail account is configured"
             )
         return rows[0]
 
-    async def _render(self, template_name: str, context: dict[str, Any]) -> tuple[str, str, str | None]:
-        rows = await arc.relay.list("mailtemplate", filters={"name": {"eq": template_name}}, limit=1)
+    async def _render(
+        self, template_name: str, context: dict[str, Any]
+    ) -> tuple[str, str, str | None]:
+        rows = await arc.relay.list(
+            "mailtemplate", filters={"name": {"eq": template_name}}, limit=1
+        )
         if not rows:
             raise TemplateNotFoundError(f"no mail template named '{template_name}'")
         row = rows[0]
         subject = _jinja_env.from_string(row["subject"]).render(**context)
         text_body = _jinja_env.from_string(row["text_body"]).render(**context)
-        html_body = _jinja_env.from_string(row["html_body"]).render(**context) if row.get("html_body") else None
+        html_body = (
+            _jinja_env.from_string(row["html_body"]).render(**context)
+            if row.get("html_body")
+            else None
+        )
         return subject, text_body, html_body
 
 
@@ -151,4 +162,6 @@ def register(kernel: Any) -> None:
     relay.register_api(Path(__file__).parent / "api")
     relay.register_tasks(Path(__file__).parent / "tasks")
 
-    kernel.export(CAPABILITY, MailProvider(), requires=["psqldb", "relay"], optional_requires=["lineup"])
+    kernel.export(
+        CAPABILITY, MailProvider(), requires=["psqldb", "relay"], optional_requires=["lineup"]
+    )

@@ -59,16 +59,24 @@ Example, via the CLI/`arc` shell (or just fill the same fields in the
 Data Browser's "New row" form):
 
 ```python
-await arc.relay.save("mailaccount", {
-    "name": "transactional",
-    "provider": "smtp",
-    "from_email": "noreply@yourdomain.com",
-    "from_name": "Your App",
-    "config": {"host": "smtp.yourprovider.com", "port": 587, "username": "apikey", "starttls": True},
-    "secret_ref": "mail.transactional.password",
-    "is_default": True,
-    "enabled": True,
-})
+await arc.relay.save(
+    "mailaccount",
+    {
+        "name": "transactional",
+        "provider": "smtp",
+        "from_email": "noreply@yourdomain.com",
+        "from_name": "Your App",
+        "config": {
+            "host": "smtp.yourprovider.com",
+            "port": 587,
+            "username": "apikey",
+            "starttls": True,
+        },
+        "secret_ref": "mail.transactional.password",
+        "is_default": True,
+        "enabled": True,
+    },
+)
 ```
 
 Then set the actual credential — **never put it in `config`**:
@@ -94,13 +102,20 @@ Create a row in `MailTemplate`:
 Example:
 
 ```python
-await arc.relay.save("mailtemplate", {
-    "name": "welcome",
-    "subject": "Welcome, {{ name }}!",
-    "text_body": "Hi {{ name }},\n\nYour account {{ email }} is ready. Roles: {{ roles | join(', ') }}.",
-    "html_body": "<p>Hi <b>{{ name }}</b>,</p><p>Your account {{ email }} is ready.</p>",
-    "sample_context": {"name": "Ada", "email": "ada@example.com", "roles": ["admin", "billing"]},
-})
+await arc.relay.save(
+    "mailtemplate",
+    {
+        "name": "welcome",
+        "subject": "Welcome, {{ name }}!",
+        "text_body": "Hi {{ name }},\n\nYour account {{ email }} is ready. Roles: {{ roles | join(', ') }}.",
+        "html_body": "<p>Hi <b>{{ name }}</b>,</p><p>Your account {{ email }} is ready.</p>",
+        "sample_context": {
+            "name": "Ada",
+            "email": "ada@example.com",
+            "roles": ["admin", "billing"],
+        },
+    },
+)
 ```
 
 Full Jinja2 syntax is available — conditionals, loops, filters
@@ -166,7 +181,7 @@ await arc.mail.send(
     ["ada@example.com"],
     cc=["manager@example.com"],
     bcc=["audit@example.com"],
-    account="transactional",   # omit to use the is_default=true account
+    account="transactional",  # omit to use the is_default=true account
     template="welcome",
     context={"name": "Ada", "email": "ada@example.com", "roles": ["admin"]},
 )
@@ -177,9 +192,14 @@ await arc.mail.send(
 ```python
 await arc.mail.send(
     ["ada@example.com"],
-    subject="Your invoice", text_body="Attached.",
+    subject="Your invoice",
+    text_body="Attached.",
     attachments=[
-        {"filename": "invoice.pdf", "source": "/var/data/invoices/inv-042.pdf", "mimetype": "application/pdf"},
+        {
+            "filename": "invoice.pdf",
+            "source": "/var/data/invoices/inv-042.pdf",
+            "mimetype": "application/pdf",
+        },
         {"filename": "receipt.pdf", "source": "https://files.example.com/receipts/042.pdf"},
     ],
 )
