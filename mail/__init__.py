@@ -124,7 +124,9 @@ class MailProvider:
 
     async def _resolve_account(self, name: str | None) -> dict:
         filters = {"name": {"eq": name}} if name else {"is_default": {"eq": True}}
-        rows = await arc.relay.list("mailaccount", filters=filters, limit=1)
+        rows = await arc.relay.list(
+            "mailaccount", fields=arc.relay.all_columns("mailaccount"), filters=filters, limit=1
+        )
         if not rows:
             raise AccountNotFoundError(
                 f"no mail account named '{name}'"
@@ -137,7 +139,10 @@ class MailProvider:
         self, template_name: str, context: dict[str, Any]
     ) -> tuple[str, str, str | None]:
         rows = await arc.relay.list(
-            "mailtemplate", filters={"name": {"eq": template_name}}, limit=1
+            "mailtemplate",
+            fields=["subject", "text_body", "html_body"],
+            filters={"name": {"eq": template_name}},
+            limit=1,
         )
         if not rows:
             raise TemplateNotFoundError(f"no mail template named '{template_name}'")

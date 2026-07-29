@@ -69,7 +69,12 @@ async def deliver_email(
     html_body: str | None,
     attachments: list[dict],
 ) -> None:
-    rows = await arc.relay.list("mailaccount", filters={"name": {"eq": account_name}}, limit=1)
+    rows = await arc.relay.list(
+        "mailaccount",
+        fields=arc.relay.all_columns("mailaccount"),
+        filters={"name": {"eq": account_name}},
+        limit=1,
+    )
     if not rows:
         raise MailDeliveryError(f"mail account '{account_name}' no longer exists")
     account = rows[0]
