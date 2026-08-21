@@ -26,18 +26,32 @@ from typing import Any
 
 import arc
 import jinja2
+from jinja2.sandbox import SandboxedEnvironment
 
 from ._delivery import deliver_email
 
 CAPABILITY = "mail"
 
-# autoescape=False: templates render into plain-text and HTML email
-# bodies, not a web page — there's no XSS surface here, and escaping
-# `&`/`<`/`>` in an operator-authored plain-text template would just
-# corrupt it. HTML templates that need real HTML-escaping of untrusted
-# context values are the template author's own responsibility, same as
-# any other hand-authored HTML in this project.
-_jinja_env = jinja2.Environment(autoescape=False)
+# SandboxedEnvironment, not a plain jinja2.Environment: `row["subject"]`/
+# `row["text_body"]`/`row["html_body"]` below come straight out of the
+# `mailtemplate` table — an ordinary declared schema with full CRUD in the
+# generic Data Browser (this module's own docstring), i.e. editable by
+# anyone with Superuser, not trusted source the way a template file on
+# disk would be. A plain Environment lets template syntax reach through
+# attribute access into `__globals__` (the textbook `{{
+# cycler.__init__.__globals__.os.popen(...) }}` SSTI payload) — the
+# sandbox blocks exactly that, at the cost of nothing a legitimate
+# subject/body template ever needed.
+#
+# Two environments, not one: autoescape=False for the plain-text
+# subject/text_body (escaping `&`/`<`/`>` there would corrupt it — see the
+# "text" env below), but html_body genuinely needs autoescape=True — this
+# module's `context` values are not staff-authored, e.g. forgot_password
+# passes the CALLER-supplied `email` straight through, so an unescaped
+# `{{ email }}` in an HTML template is a live HTML-injection path into
+# whatever the recipient's mail client renders.
+_jinja_env = SandboxedEnvironment(autoescape=False)
+_jinja_env_html = SandboxedEnvironment(autoescape=True)
 
 
 class MailError(RuntimeError):
@@ -150,7 +164,7 @@ class MailProvider:
         subject = _jinja_env.from_string(row["subject"]).render(**context)
         text_body = _jinja_env.from_string(row["text_body"]).render(**context)
         html_body = (
-            _jinja_env.from_string(row["html_body"]).render(**context)
+            _jinja_env_html.from_string(row["html_body"]).render(**context)
             if row.get("html_body")
             else None
         )
