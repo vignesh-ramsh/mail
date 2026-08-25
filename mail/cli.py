@@ -35,7 +35,7 @@ def _run(coro) -> None:
         with warnings.catch_warnings():
             warnings.simplefilter("ignore", arc.ArcAdvisory)
             arc.boot()
-        await arc.psqldb.open()
+        await arc.pgdb.open()
         has_lineup = hasattr(arc, "lineup")
         if has_lineup:
             await arc.lineup.open()
@@ -44,7 +44,7 @@ def _run(coro) -> None:
         finally:
             if has_lineup:
                 await arc.lineup.close()
-            await arc.psqldb.close()
+            await arc.pgdb.close()
 
     asyncio.run(_main())
 

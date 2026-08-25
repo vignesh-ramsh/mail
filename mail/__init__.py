@@ -172,7 +172,7 @@ class MailProvider:
 
 
 def register(kernel: Any) -> None:
-    psqldb = kernel.get("psqldb")
+    psqldb = kernel.get("pgdb")
     psqldb.register_model(Path(__file__).parent.parent / "schemas")
     psqldb.register_patches(Path(__file__).parent.parent / "patches")
 
@@ -182,5 +182,5 @@ def register(kernel: Any) -> None:
     relay.register_tasks(Path(__file__).parent.parent / "tasks")
 
     kernel.export(
-        CAPABILITY, MailProvider(), requires=["psqldb", "relay"], optional_requires=["lineup"]
+        CAPABILITY, MailProvider(), requires=["pgdb", "relay"], optional_requires=["lineup"]
     )
