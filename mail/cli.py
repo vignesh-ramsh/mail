@@ -1,8 +1,8 @@
 """mail.cli — `arc mail ...` commands.
 
 Mounted onto the core `arc` CLI via the `arc.plugins.cli` entry point,
-same mechanism as psqldb.cli/redix.cli/lineup.cli. `send-test` does a
-real `arc.boot()` + opens psqldb (and `lineup`, when installed, so a
+same mechanism as pgdb.cli/redix.cli/lineup.cli. `send-test` does a
+real `arc.boot()` + opens pgdb (and `lineup`, when installed, so a
 durable enqueue actually has a started broker to publish through) —
 same shape as authn.cli's `_run()` helper, since this does a real send,
 not a read-only connectivity probe. Comma-separated string options for

@@ -172,9 +172,9 @@ class MailProvider:
 
 
 def register(kernel: Any) -> None:
-    psqldb = kernel.get("pgdb")
-    psqldb.register_model(Path(__file__).parent.parent / "schemas")
-    psqldb.register_patches(Path(__file__).parent.parent / "patches")
+    pgdb = kernel.get("pgdb")
+    pgdb.register_model(Path(__file__).parent.parent / "schemas")
+    pgdb.register_patches(Path(__file__).parent.parent / "patches")
 
     relay = kernel.get("relay")
     relay.register_hooks(Path(__file__).parent.parent / "hooks")

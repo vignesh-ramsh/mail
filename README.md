@@ -21,7 +21,7 @@ mail/
 
 ## How it fits together
 
-- `plugin.toml`: `requires = ["psqldb", "relay"]`, `optional_requires = ["lineup"]`.
+- `plugin.toml`: `requires = ["pgdb", "relay"]`, `optional_requires = ["lineup"]`.
 - **Accounts and templates are ordinary declared schemas** (`MailAccount`,
   `MailTemplate`) — both are already full CRUD in the admin plugin's
   Data Browser. There is no bespoke account/template management API or
@@ -270,7 +270,7 @@ provider is:
 1. Add a class implementing `async def send(self, message, *, from_email, from_name, config, credential) -> None`.
 2. Register it: `PROVIDERS["sendgrid"] = SendGridProvider()`.
 3. Add `"sendgrid"` to `MailAccount.provider`'s SELECT options
-   (`mail/schemas/MailAccount.json`) and run `arc psqldb plan` / `migrate`.
+   (`mail/schemas/MailAccount.json`) and run `arc pgdb plan` / `migrate`.
 
 No changes needed anywhere else — `_delivery.py` looks the provider up
 by `account["provider"]` and calls it generically.
