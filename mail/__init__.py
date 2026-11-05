@@ -32,6 +32,15 @@ from ._delivery import deliver_email
 
 CAPABILITY = "mail"
 
+# The queue every outgoing email is enqueued on. A named constant (rather
+# than the literal at the one enqueue() call) because register() below must
+# declare THIS SAME queue to relay: mail only ever reaches it through an ad
+# hoc arc.relay.enqueue(..., queue=MAIL_QUEUE), which a freshly booted
+# worker would otherwise never learn exists — see
+# BackgroundJobsMixin.declare_queue's own docstring for the failure it
+# prevents. One constant means the declaration and the enqueue can't drift.
+MAIL_QUEUE = "mail"
+
 # SandboxedEnvironment, not a plain jinja2.Environment: `row["subject"]`/
 # `row["text_body"]`/`row["html_body"]` below come straight out of the
 # `mailtemplate` table — an ordinary declared schema with full CRUD in the
@@ -132,7 +141,7 @@ class MailProvider:
             text_body,
             html_body,
             att_meta,
-            queue="mail",
+            queue=MAIL_QUEUE,
         )
         await task
 
@@ -180,6 +189,10 @@ def register(kernel: Any) -> None:
     relay.register_hooks(Path(__file__).parent.parent / "hooks")
     relay.register_api(Path(__file__).parent.parent / "api")
     relay.register_tasks(Path(__file__).parent.parent / "tasks")
+    # Without this, a worker booted with no explicit --queues has no "mail"
+    # queue to consume (nothing pre-declares one), so queued emails sit in
+    # Redis forever with no error. No-op when lineup isn't installed.
+    relay.declare_queue(MAIL_QUEUE)
 
     kernel.export(
         CAPABILITY, MailProvider(), requires=["pgdb", "relay"], optional_requires=["lineup"]
