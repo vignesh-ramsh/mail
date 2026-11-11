@@ -101,6 +101,12 @@ class MailProvider:
         the process exits. A synchronous `check_resolvable()` failure
         inside `enqueue()` itself still surfaces immediately either way.
 
+        Inside a write (a hook that has not committed yet) it does not wait
+        at all: the mail is released when the write commits, and waiting for
+        that from inside the write would hang the request. A hand-off failure
+        there is logged by relay, not raised here. Use an `after_commit`
+        hook to send mail only once the data is durable.
+
         `attachments`, if given: a list of `{"filename", "source",
         "mimetype"}` dicts — `source` is a local filesystem path or an
         `http(s)://` URL, resolved to real bytes only once, by the worker,
@@ -143,6 +149,13 @@ class MailProvider:
             att_meta,
             queue=MAIL_QUEUE,
         )
+        if arc.relay.in_write_transaction():
+            # Called from a hook, inside a write that has not committed:
+            # the job is released only when that write commits, so waiting
+            # for it here would wait on the very write this call is part of
+            # (the request would hang). Return now; relay still logs it if
+            # the hand-off later fails.
+            return
         await task
 
     async def _resolve_account(self, name: str | None) -> dict:
