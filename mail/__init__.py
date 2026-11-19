@@ -6,8 +6,9 @@ metadata-only (never inline-bytes) attachments.
 schemas — both are already full CRUD in the generic Data Browser
 (docs/arc.MD §3.14), so this plugin has no bespoke account/template
 management API at all. `MailAccount.secret_ref` only names a settings
-key, never a credential value: the actual value is set through the
-already-existing Settings & Secrets screen (`arc.settings`, §3.5) —
+key, never a credential value: the actual value is set from the command
+line with `arc settings set <key> <value> --secret` (`arc.settings`, §3.5;
+the admin console does not handle secrets) —
 mail never stores a credential itself, reusing the one encrypted store
 the project already has rather than inventing a second one.
 

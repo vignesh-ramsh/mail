@@ -37,8 +37,8 @@ mail/
 - **Credentials are never stored by this plugin.** `MailAccount.secret_ref`
   only names a key; the real value lives in `arc.settings`' encrypted
   secret store (the same one every other credential in this project
-  uses), set via `arc settings set <key> <value> --secret` or the
-  admin plugin's Settings & Secrets screen.
+  uses), set via `arc settings set <key> <value> --secret` (secrets are
+  CLI-only: the admin console does not list, reveal or edit them).
 
 ## 1. Configuring an account
 
@@ -85,7 +85,7 @@ Then set the actual credential — **never put it in `config`**:
 arc settings set mail.transactional.password "the-real-smtp-password" --secret
 ```
 
-(or Settings & Secrets in the admin UI, using the same key name as `secret_ref`.)
+(Secrets are set from the command line only; the admin UI does not handle them. Use the same key name as `secret_ref`, and check it with `arc settings list --secrets`.)
 
 ## 2. Registering a template
 
