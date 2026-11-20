@@ -44,7 +44,8 @@
       "type": "JSON",
       "required": false,
       "unique": false,
-      "list": false
+      "list": false,
+      "default": "{   \"host\": \"smtp.gmail.com\",   \"port\": 587,   \"username\": \"admin@arc.in\" }"
     },
     {
       "id": "AA06",
